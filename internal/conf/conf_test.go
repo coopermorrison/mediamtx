@@ -227,6 +227,45 @@ func TestConfFromFile(t *testing.T) {
 	}
 }
 
+func TestAdminAllowOriginsDeprecation(t *testing.T) {
+	for _, name := range []string{"apiAllowOrigins", "metricsAllowOrigins", "pprofAllowOrigins"} {
+		t.Run(name, func(t *testing.T) {
+			for _, ca := range []struct {
+				name  string
+				value string
+				warn  bool
+			}{
+				{name: "unset"},
+				{name: "empty", value: "[]"},
+				{name: "non-empty", value: `["https://example.com"]`, warn: true},
+			} {
+				t.Run(ca.name, func(t *testing.T) {
+					var config string
+					if ca.value != "" {
+						config = name + ": " + ca.value + "\n"
+					}
+
+					l := &warningCounter{}
+					cfg, _, err := conf.Load(createTempFile(t, []byte(config)), nil, l)
+					require.NoError(t, err)
+
+					serialized, err := json.Marshal(cfg.Global())
+					require.NoError(t, err)
+
+					if ca.warn {
+						require.Equal(t, 1, l.count)
+						require.Contains(t, l.last, "parameter '"+name+"' is deprecated")
+						require.Contains(t, string(serialized), `"`+name+`":`+ca.value)
+					} else {
+						require.Zero(t, l.count)
+						require.NotContains(t, string(serialized), `"`+name+`":`)
+					}
+				})
+			}
+		})
+	}
+}
+
 func TestConfFromFileAndEnv(t *testing.T) {
 	// global parameter
 	t.Setenv("RTSP_PROTOCOLS", "tcp")

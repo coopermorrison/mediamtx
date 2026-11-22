@@ -354,6 +354,7 @@ components:
           deprecated: true
         apiAllowOrigins:
           type: array
+          deprecated: true
           items:
             type: string
         apiEncryption:
@@ -485,6 +486,7 @@ components:
           deprecated: true
         metricsAllowOrigins:
           type: array
+          deprecated: true
           items:
             type: string
         metricsEncryption:
@@ -574,6 +576,7 @@ components:
           deprecated: true
         pprofAllowOrigins:
           type: array
+          deprecated: true
           items:
             type: string
         pprofEncryption:

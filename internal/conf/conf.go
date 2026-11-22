@@ -292,7 +292,7 @@ type Conf struct {
 	APIServerKey      string     `json:"apiServerKey"`
 	APIServerCert     string     `json:"apiServerCert"`
 	APIAllowOrigin    *string    `json:"apiAllowOrigin,omitempty" deprecated:"true"`
-	APIAllowOrigins   []string   `json:"apiAllowOrigins"`
+	APIAllowOrigins   []string   `json:"apiAllowOrigins,omitempty" deprecated:"true"`
 	APITrustedProxies IPNetworks `json:"apiTrustedProxies"`
 
 	// Metrics
@@ -302,7 +302,7 @@ type Conf struct {
 	MetricsServerKey      string     `json:"metricsServerKey"`
 	MetricsServerCert     string     `json:"metricsServerCert"`
 	MetricsAllowOrigin    *string    `json:"metricsAllowOrigin,omitempty" deprecated:"true"`
-	MetricsAllowOrigins   []string   `json:"metricsAllowOrigins"`
+	MetricsAllowOrigins   []string   `json:"metricsAllowOrigins,omitempty" deprecated:"true"`
 	MetricsTrustedProxies IPNetworks `json:"metricsTrustedProxies"`
 
 	// PPROF
@@ -312,7 +312,7 @@ type Conf struct {
 	PPROFServerKey      string     `json:"pprofServerKey"`
 	PPROFServerCert     string     `json:"pprofServerCert"`
 	PPROFAllowOrigin    *string    `json:"pprofAllowOrigin,omitempty" deprecated:"true"`
-	PPROFAllowOrigins   []string   `json:"pprofAllowOrigins"`
+	PPROFAllowOrigins   []string   `json:"pprofAllowOrigins,omitempty" deprecated:"true"`
 	PPROFTrustedProxies IPNetworks `json:"pprofTrustedProxies"`
 
 	// Playback
@@ -718,8 +718,12 @@ func (conf *Conf) validate(l logger.Writer) error {
 
 	// Control API (deprecated params)
 
+	if len(conf.APIAllowOrigins) != 0 {
+		l.Log(logger.Warn, "parameter 'apiAllowOrigins' is deprecated and will be removed in a future release")
+	}
+
 	if conf.APIAllowOrigin != nil {
-		l.Log(logger.Warn, "parameter 'apiAllowOrigin' is deprecated and has been replaced with 'apiAllowOrigins'")
+		l.Log(logger.Warn, "parameter 'apiAllowOrigin' is deprecated and will be removed in a future release")
 		conf.APIAllowOrigins = []string{*conf.APIAllowOrigin}
 	}
 
@@ -733,8 +737,12 @@ func (conf *Conf) validate(l logger.Writer) error {
 
 	// Metrics (deprecated params)
 
+	if len(conf.MetricsAllowOrigins) != 0 {
+		l.Log(logger.Warn, "parameter 'metricsAllowOrigins' is deprecated and will be removed in a future release")
+	}
+
 	if conf.MetricsAllowOrigin != nil {
-		l.Log(logger.Warn, "parameter 'metricsAllowOrigin' is deprecated and has been replaced with 'metricsAllowOrigins'")
+		l.Log(logger.Warn, "parameter 'metricsAllowOrigin' is deprecated and will be removed in a future release")
 		conf.MetricsAllowOrigins = []string{*conf.MetricsAllowOrigin}
 	}
 
@@ -748,8 +756,12 @@ func (conf *Conf) validate(l logger.Writer) error {
 
 	// PPROF (deprecated params)
 
+	if len(conf.PPROFAllowOrigins) != 0 {
+		l.Log(logger.Warn, "parameter 'pprofAllowOrigins' is deprecated and will be removed in a future release")
+	}
+
 	if conf.PPROFAllowOrigin != nil {
-		l.Log(logger.Warn, "parameter 'pprofAllowOrigin' is deprecated and has been replaced with 'pprofAllowOrigins'")
+		l.Log(logger.Warn, "parameter 'pprofAllowOrigin' is deprecated and will be removed in a future release")
 		conf.PPROFAllowOrigins = []string{*conf.PPROFAllowOrigin}
 	}
 
